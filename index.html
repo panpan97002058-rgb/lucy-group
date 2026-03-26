@@ -3,87 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucy Group | 藝術社團</title>
-    
+    <title>LUCY GROUP | WORKS</title>
     <style>
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #fafafa;
-            color: #333;
-            margin: 0;
-            text-align: center;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin: 0; background: #fff; color: #000;
         }
+
+        /* 標題固定在左上角，模仿專業藝廊導航 */
         header {
-            padding: 80px 20px;
-            background: #fff;
-            border-bottom: 1px solid #eee;
+            position: fixed;
+            top: 40px; left: 50px;
+            z-index: 100;
         }
-        .member-grid {
+        h1 { font-size: 20px; font-weight: 600; text-transform: uppercase; margin: 0; }
+        nav { margin-top: 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; }
+        nav a { display: block; text-decoration: none; color: #999; margin-bottom: 8px; }
+        nav a:hover { color: #000; }
+
+        /* 作品展示區：四欄佈局 */
+        .main-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(4, 1fr); /* 四位成員一人一欄 */
             gap: 20px;
-            padding: 50px;
+            padding: 150px 50px 50px 250px; /* 左邊留白給 Header */
         }
-        .member-card {
-            height: 250px;
-            background: #ffffff;
+
+        /* 每一位成員的「垂直作品列」 */
+        .member-column {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: #444;
-            transition: all 0.3s ease;
-            border: 1px solid #ddd;
-            border-radius: 8px; /* 加上圓角比較好看 */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            flex-direction: column;
+            gap: 40px; /* 作品之間的垂直間距 */
         }
-        .member-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            background: #f9f9f9;
+
+        .member-info-header {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
         }
-        h2 { margin: 0; color: #333; }
-        p { color: #888; }
+
+        .art-piece {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .art-piece img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(20%); /* 稍微帶點灰色調，更有質感 */
+            transition: filter 0.3s;
+        }
+
+        .art-piece img:hover {
+            filter: grayscale(0%);
+        }
+
+        .caption {
+            font-size: 11px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        /* RWD：手機看時變成兩欄或一欄 */
+        @media (max-width: 1024px) {
+            header { position: relative; left: 20px; top: 20px; }
+            .main-content { padding: 50px 20px; grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>LUCY GROUP</h1>
-        <p>四個靈魂，一個藝術夢想。</p>
+        <nav>
+            <a href="#">All Works</a>
+            <a href="#">Exhibitions</a>
+            <a href="#">About Group</a>
+        </nav>
     </header>
 
-    <main class="member-grid">
-        <a href="#" class="member-card">
-            <div>
-                <img src="images/member_a_work.jpg" alt="作品" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
-                <h2>成員 A</h2>
-                <p>油畫創作</p>
+    <main class="main-content">
+        
+        <div class="member-column">
+            <div class="member-info-header">Artist A</div>
+            
+            <div class="art-piece">
+                <img src="images/a_1.jpg" alt="Work 1">
+                <div class="caption">Untitled #1, 2026<br>Oil on Canvas</div>
             </div>
-        </a>
-        <a href="#" class="member-card">
-            <div>
-                <h2>成員 B</h2>
-                <p>數位插畫</p>
-            </div>
-        </a>
-        <a href="#" class="member-card">
-            <div>
-                <h2>成員 C</h2>
-                <p>攝影藝術</p>
-            </div>
-        </a>
-        <a href="#" class="member-card">
-            <div>
-                <h2>成員 D</h2>
-                <p>立體雕塑</p>
-            </div>
-        </a>
-    </main>
 
-    <footer style="padding: 50px; color: #bbb; font-size: 0.8rem;">
-        &copy; 2026 Lucy Group. All Rights Reserved.
-    </footer>
+            <div class="art-piece">
+                <img src="images/a_2.jpg" alt="Work 2">
+                <div class="caption">Study of Shadow, 2026<br>Mixed Media</div>
+            </div>
+            </div>
+
+        <div class="member-column">
+            <div class="member-info-header">Artist B</div>
+            
+            <div class="art-piece">
+                <img src="images/b_1.jpg" alt="Work 1">
+                <div class="caption">Digital Flow, 2026</div>
+            </div>
+            </div>
+
+        <div class="member-column">
+            <div class="member-info-header">Artist C</div>
+            
+            <div class="art-piece">
+                <img src="images/c_1.jpg" alt="Work 1">
+                <div class="caption">Photography Series, 2026</div>
+            </div>
+        </div>
+
+        <div class="member-column">
+            <div class="member-info-header">Artist D</div>
+            
+            <div class="art-piece">
+                <img src="images/d_1.jpg" alt="Work 1">
+                <div class="caption">Stone Structure, 2026</div>
+            </div>
+        </div>
+
+    </main>
 
 </body>
 </html>
