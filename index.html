@@ -1,37 +1,88 @@
-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #fafafa;
-    color: #333;
-    margin: 0;
-    text-align: center;
-}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucy Group | 藝術社團</title>
+    
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            margin: 0;
+            text-align: center;
+        }
+        header {
+            padding: 80px 20px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 50px;
+        }
+        .member-card {
+            height: 250px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #444;
+            transition: all 0.3s ease;
+            border: 1px solid #ddd;
+            border-radius: 8px; /* 加上圓角比較好看 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: #f9f9f9;
+        }
+        h2 { margin: 0; color: #333; }
+        p { color: #888; }
+    </style>
+</head>
+<body>
 
-header {
-    padding: 100px 20px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-}
+    <header>
+        <h1>LUCY GROUP</h1>
+        <p>四個靈魂，一個藝術夢想。</p>
+    </header>
 
-.member-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 50px;
-}
+    <main class="member-grid">
+        <a href="#" class="member-card">
+            <div>
+                <h2>成員 A</h2>
+                <p>油畫創作</p>
+            </div>
+        </a>
+        <a href="#" class="member-card">
+            <div>
+                <h2>成員 B</h2>
+                <p>數位插畫</p>
+            </div>
+        </a>
+        <a href="#" class="member-card">
+            <div>
+                <h2>成員 C</h2>
+                <p>攝影藝術</p>
+            </div>
+        </a>
+        <a href="#" class="member-card">
+            <div>
+                <h2>成員 D</h2>
+                <p>立體雕塑</p>
+            </div>
+        </a>
+    </main>
 
-.member-card {
-    height: 300px;
-    background: #eee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.3s;
-    border: 1px solid #ddd;
-}
+    <footer style="padding: 50px; color: #bbb; font-size: 0.8rem;">
+        &copy; 2026 Lucy Group. All Rights Reserved.
+    </footer>
 
-.member-card:hover {
-    transform: translateY(-10px);
-    background: #f0f0f0;
-}
+</body>
+</html>
