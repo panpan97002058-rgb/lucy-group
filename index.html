@@ -1,85 +1,180 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>展覽活動 | 藝術家個人網站範本</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Archive</title>
     <style>
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .event-image { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        .event-card:hover .event-image { transform: scale(1.03); }
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --gray: #999999;
+            --light-gray: #f2f2f2;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 20px;
+            text-align: center;
+            z-index: 1000;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.4em;
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: color 0.3s;
+            text-transform: uppercase;
+        }
+
+        nav button.active, nav button:hover {
+            color: var(--text-color);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            padding: 15px;
+            max-width: 2000px;
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            background-color: var(--light-gray);
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .grid-item img.loaded {
+            opacity: 1;
+        }
+
+        #sentinel {
+            height: 100px;
+            width: 100%;
+        }
     </style>
 </head>
-<body class="bg-white text-black">
+<body>
 
-    <nav class="p-8 flex justify-between items-center sticky top-0 bg-white z-50">
-        <div class="text-2xl font-bold tracking-tighter">BERNAR VENET</div>
-        <div class="space-x-8 text-sm uppercase tracking-widest font-medium">
-            <a href="#" class="hover:text-gray-500">Works</a>
-            <a href="#" class="underline">Events</a>
-            <a href="#" class="hover:text-gray-500">Foundation</a>
-            <a href="#" class="hover:text-gray-500">Contact</a>
-        </div>
+<header>
+    <h1>Collection</h1>
+    <nav id="filters">
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="cat1">Category 01</button>
+        <button class="filter-btn" data-cat="cat2">Category 02</button>
+        <button class="filter-btn" data-cat="cat3">Category 03</button>
+        <button class="filter-btn" data-cat="cat4">Category 04</button>
     </nav>
+</header>
 
-    <header class="px-8 pt-12 pb-20 border-b border-gray-100">
-        <h1 class="text-[12vw] font-black leading-none tracking-tighter uppercase">Events</h1>
-    </header>
+<main class="grid-container" id="gallery"></main>
+<div id="sentinel"></div>
 
-    <div class="px-8 py-6 flex space-x-6 text-xs uppercase tracking-widest text-gray-400">
-        <button class="text-black border-b border-black pb-1">Current</button>
-        <button class="hover:text-black transition">Upcoming</button>
-        <button class="hover:text-black transition">Past</button>
-    </div>
+<script>
+    const CONFIG = {
+        categories: ['cat1', 'cat2', 'cat3', 'cat4'],
+        itemsPerCat: 1000,
+        batchSize: 30
+    };
 
-    <main class="px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16 pb-24">
-        
-        <article class="event-card cursor-pointer group">
-            <div class="overflow-hidden bg-gray-100 aspect-[4/5] mb-6">
-                <img src="https://images.unsplash.com/photo-1554188248-986adbb73be4?auto=format&fit=crop&q=80&w=1000" 
-                     alt="Exhibition" class="event-image w-full h-full object-cover">
-            </div>
-            <div class="space-y-2">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500">Sept 28, 2024 — Feb 28, 2025</p>
-                <h2 class="text-xl font-bold leading-tight uppercase group-hover:text-gray-700">Beyond Concept and Matter</h2>
-                <p class="text-sm text-gray-600">Phoenix Center, Beijing</p>
-            </div>
-        </article>
+    let allData = [];
+    let filteredData = [];
+    let currentIndex = 0;
 
-        <article class="event-card cursor-pointer group">
-            <div class="overflow-hidden bg-gray-100 aspect-[4/5] mb-6">
-                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1000" 
-                     alt="Exhibition" class="event-image w-full h-full object-cover">
-            </div>
-            <div class="space-y-2">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500">May 17 — June 21, 2025</p>
-                <h2 class="text-xl font-bold leading-tight uppercase group-hover:text-gray-700">Concepts in Form</h2>
-                <p class="text-sm text-gray-600">Gow Langsford Gallery, Auckland</p>
-            </div>
-        </article>
+    function init() {
+        CONFIG.categories.forEach(cat => {
+            for (let i = 1; i <= CONFIG.itemsPerCat; i++) {
+                allData.push({ cat: cat, url: `photos/${cat}/${i}.jpg` });
+            }
+        });
+        filteredData = [...allData];
+    }
 
-        <article class="event-card cursor-pointer group">
-            <div class="overflow-hidden bg-gray-100 aspect-[4/5] mb-6">
-                <img src="https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&q=80&w=1000" 
-                     alt="Exhibition" class="event-image w-full h-full object-cover">
-            </div>
-            <div class="space-y-2">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500">Ongoing</p>
-                <h2 class="text-xl font-bold leading-tight uppercase group-hover:text-gray-700">Indeterminate Lines</h2>
-                <p class="text-sm text-gray-600">Venet Foundation, Le Muy</p>
-            </div>
-        </article>
+    const gallery = document.getElementById('gallery');
+    const sentinel = document.getElementById('sentinel');
 
-    </main>
+    function render() {
+        const nextBatch = filteredData.slice(currentIndex, currentIndex + CONFIG.batchSize);
+        nextBatch.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'grid-item';
+            const img = document.createElement('img');
+            img.dataset.src = item.url;
+            img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+            imgObserver.observe(img);
+            div.appendChild(img);
+            gallery.appendChild(div);
+        });
+        currentIndex += CONFIG.batchSize;
+    }
 
-    <footer class="p-8 border-t border-gray-100 text-[10px] uppercase tracking-widest text-gray-400 flex justify-between">
-        <p>© 2024 Your Studio. All Rights Reserved.</p>
-        <div class="flex space-x-4 font-bold text-black">
-            <a href="#">Instagram</a>
-            <a href="#">Newsletter</a>
-        </div>
-    </footer>
+    const imgObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.onload = () => img.classList.add('loaded');
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && currentIndex < filteredData.length) {
+            render();
+        }
+    }, { rootMargin: '200px' });
+
+    document.getElementById('filters').addEventListener('click', (e) => {
+        if (e.target.tagName !== 'BUTTON') return;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        const cat = e.target.dataset.cat;
+        filteredData = cat === 'all' ? [...allData] : allData.filter(d => d.cat === cat);
+        gallery.innerHTML = '';
+        currentIndex = 0;
+        render();
+        window.scrollTo(0, 0);
+    });
+
+    init();
+    render();
+    scrollObserver.observe(sentinel);
+</script>
 
 </body>
 </html>
