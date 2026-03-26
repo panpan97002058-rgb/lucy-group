@@ -3,104 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Art Archive | Collection</title>
+    <title>Archive | Infinite Gallery</title>
     <style>
         :root { --bg: #ffffff; --text: #000000; --gray: #999999; --light: #f8f8f8; }
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--text); }
 
-        /* Header & Navigation */
-        header { position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 40px 20px; text-align: center; z-index: 1000; border-bottom: 1px solid var(--light); }
+        /* Header */
+        header { position: sticky; top: 0; background: rgba(255,255,255,0.98); padding: 40px 20px; text-align: center; z-index: 1000; border-bottom: 1px solid var(--light); }
         h1 { font-size: 1.2rem; font-weight: 400; letter-spacing: 0.4em; text-transform: uppercase; margin: 0 0 20px 0; }
         nav button { background: none; border: none; color: var(--gray); font-size: 0.7rem; letter-spacing: 0.2em; padding: 10px 15px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        nav button.active, nav button:hover { color: var(--text); font-weight: bold; }
+        nav button.active { color: var(--text); font-weight: bold; border-bottom: 1px solid #000; }
 
-        /* Photo Grid */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; padding: 20px; max-width: 2000px; margin: 0 auto; }
-        .grid-item { background: var(--light); aspect-ratio: 1/1; overflow: hidden; cursor: pointer; position: relative; }
-        .grid-item img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; }
+        /* Grid Layout */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; padding: 10px; max-width: 2400px; margin: 0 auto; }
+        .grid-item { background: var(--light); aspect-ratio: 1/1; overflow: hidden; cursor: pointer; }
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease; }
         .grid-item img.loaded { opacity: 1; }
-        .grid-item:hover img { transform: scale(1.05); }
 
-        /* Modal / Popup Detail View */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; overflow-y: auto; padding: 80px 40px; }
-        .modal-content { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 50px; align-items: flex-start; }
-        .modal-left { flex: 1.2; min-width: 320px; }
-        .modal-left img { width: 100%; height: auto; display: block; }
-        .modal-right { flex: 0.8; min-width: 320px; }
-        .modal-right h2 { font-weight: 400; font-size: 1.5rem; letter-spacing: 2px; margin: 0 0 20px 0; border-bottom: 1px solid var(--light); padding-bottom: 15px; }
-        .modal-right p { line-height: 1.8; color: #333; font-size: 0.95rem; white-space: pre-line; }
-        .close-btn { position: fixed; top: 30px; right: 30px; font-size: 0.75rem; cursor: pointer; letter-spacing: 3px; border: 1px solid #000; padding: 8px 20px; text-transform: uppercase; background: #fff; z-index: 10000; }
-        .close-btn:hover { background: #000; color: #fff; }
+        /* Detail Modal */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; overflow-y: auto; padding: 60px 20px; }
+        .modal-content { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; }
+        .modal-left { flex: 1.5; min-width: 300px; }
+        .modal-left img { width: 100%; height: auto; }
+        .modal-right { flex: 1; min-width: 300px; }
+        .modal-right h2 { font-weight: 400; letter-spacing: 2px; margin-top: 0; border-bottom: 1px solid var(--light); padding-bottom: 20px; }
+        .modal-right p { line-height: 2; color: #444; white-space: pre-line; }
+        .close-btn { position: fixed; top: 20px; right: 20px; cursor: pointer; letter-spacing: 2px; border: 1px solid #000; padding: 8px 20px; font-size: 0.7rem; text-transform: uppercase; background: #fff; z-index: 10000; }
 
-        #sentinel { height: 100px; width: 100%; }
-        
-        @media (max-width: 768px) {
-            .modal-content { flex-direction: column; }
-            .modal-right { min-width: 100%; }
-        }
+        /* Loading Trigger */
+        #sentinel { height: 100px; width: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; letter-spacing: 2px; color: var(--gray); }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Collection</h1>
+    <h1>Archive</h1>
     <nav id="filters">
         <button class="filter-btn active" data-cat="all">All</button>
         <button class="filter-btn" data-cat="cat1">Category 01</button>
         <button class="filter-btn" data-cat="cat2">Category 02</button>
+        <button class="filter-btn" data-cat="cat3">Category 03</button>
+        <button class="filter-btn" data-cat="cat4">Category 04</button>
     </nav>
 </header>
 
 <main class="grid-container" id="gallery"></main>
-<div id="sentinel"></div>
+
+<div id="sentinel">LOADING...</div>
 
 <div id="modal">
-    <div class="close-btn" onclick="closeModal()">Close</div>
+    <div class="close-btn" onclick="closeModal()">CLOSE</div>
     <div class="modal-content">
-        <div class="modal-left">
-            <img id="modal-img" src="" alt="Detail View">
-        </div>
+        <div class="modal-left"><img id="modal-img" src=""></div>
         <div class="modal-right">
-            <h2 id="modal-title">Project Title</h2>
-            <p id="modal-desc">Detailed information about this work.</p>
+            <h2 id="modal-title"></h2>
+            <p id="modal-desc"></p>
         </div>
     </div>
 </div>
 
 <script>
-    /* --- DATABASE SECTION ---
-       Add your images, titles, and descriptions here.
+    /* To handle 4000 images, you would fill this DATA array.
+       The infinite scroll will automatically handle the loading chunks.
     */
     const DATA = [
-        { 
-            cat: 'cat1', 
-            url: 'photos/cat1/1.jpg', 
-            title: 'Sculpture Study 01', 
-            desc: 'Material: Raw Steel\nDimensions: 120 x 80 cm\nCreated in 2024.' 
-        },
-        { 
-            cat: 'cat1', 
-            url: 'photos/cat1/2.jpg', 
-            title: 'Minimalist Form', 
-            desc: 'A study on negative space and linear composition.' 
-        },
-        { 
-            cat: 'cat2', 
-            url: 'photos/cat2/1.jpg', 
-            title: 'Abstract Painting', 
-            desc: 'Oil on canvas.\nPart of the "Untitled" series.' 
-        }
-        // Copy and paste the block above to add more images.
+        { cat: 'cat1', url: 'photos/cat1/1.jpg', title: 'Work 01', desc: 'Description text...' },
+        { cat: 'cat2', url: 'photos/cat2/1.jpg', title: 'Work 02', desc: 'Description text...' },
+        { cat: 'cat3', url: 'photos/cat3/1.jpg', title: 'Work 03', desc: 'Description text...' },
+        { cat: 'cat4', url: 'photos/cat4/1.jpg', title: 'Work 04', desc: 'Description text...' }
+        // Add all your items here...
     ];
 
     let filteredData = [...DATA];
     let currentIndex = 0;
-    const batchSize = 15;
+    const batchSize = 12; // Loads 12 images at a time
     const gallery = document.getElementById('gallery');
+    const sentinel = document.getElementById('sentinel');
 
-    function render() {
+    // Function to render images in batches
+    function renderBatch() {
         const nextBatch = filteredData.slice(currentIndex, currentIndex + batchSize);
+        if (nextBatch.length === 0) {
+            sentinel.innerText = "END OF COLLECTION";
+            return;
+        }
+
         nextBatch.forEach(item => {
             const div = document.createElement('div');
             div.className = 'grid-item';
@@ -109,29 +97,15 @@
             const img = document.createElement('img');
             img.dataset.src = item.url;
             img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-            imgObserver.observe(img);
             
+            imgObserver.observe(img);
             div.appendChild(img);
             gallery.appendChild(div);
         });
         currentIndex += batchSize;
     }
 
-    // Modal Interaction
-    function openModal(item) {
-        document.getElementById('modal').style.display = 'block';
-        document.getElementById('modal-img').src = item.url;
-        document.getElementById('modal-title').innerText = item.title;
-        document.getElementById('modal-desc').innerText = item.desc;
-        document.body.style.overflow = 'hidden'; 
-    }
-
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    // Image Lazy Loader
+    // Intersection Observer for Lazy Loading Images
     const imgObserver = new IntersectionObserver((entries, obs) => {
         entries.forEach(e => {
             if(e.isIntersecting) {
@@ -141,21 +115,32 @@
                 obs.unobserve(img);
             }
         });
-    });
+    }, { rootMargin: '50px' });
 
-    // Infinite Scroll
+    // Intersection Observer for Infinite Scroll
     const scrollObserver = new IntersectionObserver(e => {
         if(e[0].isIntersecting && currentIndex < filteredData.length) {
-            render();
+            renderBatch();
         }
-    }, { rootMargin: '200px' });
-    scrollObserver.observe(document.getElementById('sentinel'));
+    }, { rootMargin: '300px' }); // Starts loading when user is 300px from bottom
 
-    // Category Filtering
+    function openModal(item) {
+        document.getElementById('modal').style.display = 'block';
+        document.getElementById('modal-img').src = item.url;
+        document.getElementById('modal-title').innerText = item.title;
+        document.getElementById('modal-desc').innerText = item.desc;
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Filter Logic
     document.getElementById('filters').addEventListener('click', e => {
         if(e.target.tagName !== 'BUTTON') return;
-        
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         
         const cat = e.target.dataset.cat;
@@ -163,12 +148,14 @@
         
         gallery.innerHTML = '';
         currentIndex = 0;
-        render();
+        sentinel.innerText = "LOADING...";
+        renderBatch();
         window.scrollTo(0, 0);
     });
 
-    // Initial Start
-    render();
+    // Initialize
+    renderBatch();
+    scrollObserver.observe(sentinel);
 </script>
 
 </body>
